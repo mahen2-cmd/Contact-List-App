@@ -131,40 +131,22 @@ def addContact():
 
 
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        confirm_password = request.form['confirm_password']
-
-        if password != confirm_password:
-            flash("Password and Confirm Password don't match", 'danger')
-            return redirect(url_for('register'))
+        name = request.form['name']
+        email = request.form['email']
+        phone = request.form['phone']
 
 
-
-
-        hashed_password = generate_password_hash(password, method='sha256')
-
-
-
-
-         # Connect to the database
+        # Connect to the database
         conn = sqlite3.connect('User.db')
         cursor = conn.cursor()
 
 
-        cursor.execute('SELECT EXISTS ( SELECT 1 FROM User WHERE username = ?)', (username,))
+        index = get_row_count("Contacts") + 1
+        data = (index, name, email, phone, 1)
 
-        exists = cursor.fetchone()[0]
+        print(data)
 
-        if(exists):
-            flash('Username already exists. Choose another username.', 'failure')
-            return redirect(url_for('register'))
-
-
-        index = get_row_count("User") + 1
-        data = (index, username, hashed_password)
-
-        cursor.execute('INSERT INTO User VALUES (?, ?, ?)', data)
+        cursor.execute('INSERT INTO Contacts VALUES (?, ?, ?, ?, ?)', data)
 
         # Save the changes and close the connection
         conn.commit()
@@ -173,7 +155,7 @@ def addContact():
 
 
         # flash('Registration successful. You can now log in.', 'success')
-        return redirect(url_for('login'))
+        return redirect(url_for('dashboard', name="mahen"))
 
 
 
