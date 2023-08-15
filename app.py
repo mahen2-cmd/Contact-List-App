@@ -154,7 +154,6 @@ def addContact():
 
 
 
-        # flash('Registration successful. You can now log in.', 'success')
         return redirect(url_for('dashboard', name="mahen"))
 
 
@@ -165,6 +164,34 @@ def addContact():
 
 @app.route('/dashboard/deleteContact', methods=['GET', 'POST'])
 def deleteContact():
+
+    if request.method == 'POST':
+        name = request.form['name']
+
+
+        # Connect to the database
+        conn = sqlite3.connect('User.db')
+        cursor = conn.cursor()
+
+
+
+
+        # Define the SQL query to delete contacts with a specific email
+        delete_query = f'DELETE FROM contacts WHERE name = ?;'
+
+
+        cursor.execute(delete_query, (name,))
+
+
+        # Save the changes and close the connection
+        conn.commit()
+        conn.close()
+
+
+
+        return redirect(url_for('dashboard', name="mahen"))
+
+
     return render_template('deleteContact.html')
 
 
