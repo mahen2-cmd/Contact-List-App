@@ -125,13 +125,47 @@ def dashboard(name):
     return render_template('dashboard.html', user=name)
 
 
-@app.route('/dashboard/addContact', methods=['GET', 'POST'])
-def addContact():
+
+
+
+
+def get_person_index_by_username(username):
+    # Connect to the database
+    conn = sqlite3.connect('User.db')
+    cursor = conn.cursor()
+
+    # Define the SQL query to retrieve the index based on username
+    query = f'SELECT id FROM User WHERE username = ?;'
+
+    # Execute the query with the username as a parameter
+    cursor.execute(query, (username,))
+
+    # Fetch the result
+    result = cursor.fetchone()
+
+    # Close the connection
+    conn.close()
+
+    if result:
+        return result[0]  # Return the index (ID) of the person
+    else:
+        return None  # Return None if username not found
+
+
+
+
+
+
+
+
+
+@app.route('/dashboard/addContact/<name>', methods=['GET', 'POST'])
+def addContact(name):
 
 
 
     if request.method == 'POST':
-        name = request.form['name']
+        cname = request.form['name']
         email = request.form['email']
         phone = request.form['phone']
 
@@ -141,8 +175,15 @@ def addContact():
         cursor = conn.cursor()
 
 
+
+        # cursor.execute('SELECT username FROM User WHERE username = ?', (name,))
+
+        id = get_person_index_by_username(name)
+
+
+
         index = get_row_count("Contacts") + 1
-        data = (index, name, email, phone, 1)
+        data = (index, cname, email, phone, id)
 
         print(data)
 
@@ -154,11 +195,11 @@ def addContact():
 
 
 
-        return redirect(url_for('dashboard', name="mahen"))
+        return redirect(url_for('dashboard', name=name))
 
 
 
-    return render_template('addContact.html')
+    return render_template('addContact.html', user=name)
 
 
 
@@ -177,7 +218,7 @@ def deleteContact():
 
 
         # Define the SQL query to delete contacts with a specific email
-        delete_query = f'DELETE FROM contacts WHERE name = ?;'
+        delete_query = f'DELETE FROM Contacts WHERE name = ?;'
 
 
         cursor.execute(delete_query, (name,))

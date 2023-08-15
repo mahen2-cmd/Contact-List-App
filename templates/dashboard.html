@@ -20,7 +20,7 @@
         <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
 
         <div class="mt-3">
-            <a href="{{ url_for('addContact') }}" class="btn btn-primary me-3" id="addContactButton">Add Contact</a>
+            <a href="{{ url_for('addContact', name=user) }}" class="btn btn-primary me-3" id="addContactButton">Add Contact</a>
             <a href="{{ url_for('deleteContact') }}" class="btn btn-danger" id="deleteContactButton">Delete Contact</a>
         </div>
 
@@ -28,16 +28,6 @@
 
     </div>
 
-    <script>
-        // JavaScript logic for button actions can go here
-        document.getElementById("addContactButton").addEventListener("click", function() {
-            // Handle adding contact logic here
-        });
-
-        document.getElementById("deleteContactButton").addEventListener("click", function() {
-            // Handle deleting contact logic here
-        });
-    </script>
 
 
 </body>
