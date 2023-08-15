@@ -20,11 +20,11 @@ def home():
 
 
 
-def get_row_count(table_name):
+def get_max_id(table_name):
     conn = sqlite3.connect('user.db')  # Replace with your database file path
     cursor = conn.cursor()
 
-    query = f"SELECT COUNT(*) FROM {table_name};"
+    query = f"SELECT MAX(id) FROM {table_name};"
     cursor.execute(query)
     row_count = cursor.fetchone()[0]
 
@@ -67,7 +67,7 @@ def register():
             return redirect(url_for('register'))
 
 
-        index = get_row_count("User") + 1
+        index = get_max_id("User") + 1
         data = (index, username, hashed_password)
 
         cursor.execute('INSERT INTO User VALUES (?, ?, ?)', data)
@@ -176,13 +176,12 @@ def addContact(name):
 
 
 
-        # cursor.execute('SELECT username FROM User WHERE username = ?', (name,))
 
         id = get_person_index_by_username(name)
 
 
 
-        index = get_row_count("Contacts") + 1
+        index = get_max_id("Contacts") + 1
         data = (index, cname, email, phone, id)
 
         print(data)
@@ -203,11 +202,11 @@ def addContact(name):
 
 
 
-@app.route('/dashboard/deleteContact', methods=['GET', 'POST'])
-def deleteContact():
+@app.route('/dashboard/deleteContact/<name>', methods=['GET', 'POST'])
+def deleteContact(name):
 
     if request.method == 'POST':
-        name = request.form['name']
+        cname = request.form['name']
 
 
         # Connect to the database
@@ -215,13 +214,13 @@ def deleteContact():
         cursor = conn.cursor()
 
 
-
+        user_id = get_person_index_by_username(name)
 
         # Define the SQL query to delete contacts with a specific email
-        delete_query = f'DELETE FROM Contacts WHERE name = ?;'
+        delete_query = f'DELETE FROM Contacts WHERE name = ? AND user_id = ?;'
 
 
-        cursor.execute(delete_query, (name,))
+        cursor.execute(delete_query, (cname, user_id))
 
 
         # Save the changes and close the connection
@@ -230,10 +229,10 @@ def deleteContact():
 
 
 
-        return redirect(url_for('dashboard', name="mahen"))
+        return redirect(url_for('dashboard', name=name))
 
 
-    return render_template('deleteContact.html')
+    return render_template('deleteContact.html', user=name)
 
 
 @app.route('/logout')
