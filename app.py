@@ -3,6 +3,18 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 from dotenv import load_dotenv
 import os
+import csv
+
+'''
+1. Add Export CSV functions
+2. Add Auth0 authentication system.
+3. Update Contact
+4. Search and Filter Contacts
+5. Add Pictures
+6. Make User Profiles
+7. Advanced Styling. We Style the webpages a bit better
+
+'''
 
 
 
@@ -256,6 +268,30 @@ def viewContacts(name):
 
 
     return render_template('viewContacts.html', data=rows)
+
+
+
+
+@app.route('/export-all-csv')
+def export_all_csv():
+    # data = get_data_from_database()
+
+    # # Set up CSV response
+    # csv_output = io.StringIO()
+    # csv_writer = csv.writer(csv_output)
+
+    # # Write data to CSV
+    # for row in data:
+    #     csv_writer.writerow(row)
+
+    # # Prepare response
+    # response = Response(csv_output.getvalue(), content_type='text/csv')
+    # response.headers['Content-Disposition'] = 'attachment; filename=all_contacts.csv'
+
+    # return response
+
+    return render_template("exportallcsv.html")
+
 
 @app.route('/logout')
 def logout():

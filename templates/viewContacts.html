@@ -31,6 +31,10 @@
             {% endfor %}
         </tbody>
     </table>
+
+
+    <!-- Add the Download All Contacts as CSV button -->
+    <a href="{{ url_for('export_all_csv') }}" class="btn btn-success">Download All Contacts as CSV</a>
 </div>
 
 <!-- Bootstrap JS -->
