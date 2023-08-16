@@ -131,9 +131,6 @@ def login():
 @app.route('/dashboard/<name>', methods=['GET', 'POST'])
 def dashboard(name):
 
-    # if request.method == 'POST':
-
-
     return render_template('dashboard.html', user=name)
 
 
@@ -246,6 +243,45 @@ def deleteContact(name):
 
     return render_template('deleteContact.html', user=name)
 
+
+
+@app.route('/dashboard/updateContact/<name>', methods=['GET', 'POST'])
+def updateContact(name):
+
+    if request.method == 'POST':
+
+        cname = request.form['name']
+        email = request.form['email']
+        phone = request.form['phone']
+
+
+
+
+        # Connect to the database
+        conn = sqlite3.connect('User.db')
+        cursor = conn.cursor()
+
+
+        user_id = get_person_index_by_username(name)
+
+        # Define the SQL query to delete contacts with a specific email
+        update_query = f'UPDATE Contacts SET email = ?, phoneNumber = ? WHERE user_id = ? AND name = ?;'
+
+
+        cursor.execute(update_query, (email, phone, user_id, cname))
+
+
+        # Save the changes and close the connection
+        conn.commit()
+        conn.close()
+
+
+
+        return redirect(url_for('dashboard', name=name))
+
+
+    return render_template('updateContact.html', user=name)
+
 @app.route('/dashboard/viewContacts/<name>')
 def viewContacts(name):
     # Connect to the database
@@ -274,23 +310,11 @@ def viewContacts(name):
 
 @app.route('/export-all-csv')
 def export_all_csv():
-    # data = get_data_from_database()
-
-    # # Set up CSV response
-    # csv_output = io.StringIO()
-    # csv_writer = csv.writer(csv_output)
-
-    # # Write data to CSV
-    # for row in data:
-    #     csv_writer.writerow(row)
-
-    # # Prepare response
-    # response = Response(csv_output.getvalue(), content_type='text/csv')
-    # response.headers['Content-Disposition'] = 'attachment; filename=all_contacts.csv'
-
-    # return response
 
     return render_template("exportallcsv.html")
+
+
+
 
 
 @app.route('/logout')
