@@ -20,7 +20,7 @@
         <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
 
         <div class="mt-3">
-            <a href="{{ url_for('viewContacts') }}" class="btn btn-info me-3" id="addContactButton">View Contacts</a>
+            <a href="{{ url_for('viewContacts', name=user) }}" class="btn btn-info me-3" id="addContactButton">View Contacts</a>
             <a href="{{ url_for('addContact', name=user) }}" class="btn btn-primary me-3" id="addContactButton">Add Contact</a>
             <a href="{{ url_for('deleteContact', name=user) }}" class="btn btn-danger" id="deleteContactButton">Delete Contact</a>
         </div>

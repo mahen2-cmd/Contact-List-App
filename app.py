@@ -234,9 +234,28 @@ def deleteContact(name):
 
     return render_template('deleteContact.html', user=name)
 
-@app.route('/viewContacts')
-def viewContacts():
-    return render_template('viewContacts.html')
+@app.route('/dashboard/viewContacts/<name>')
+def viewContacts(name):
+    # Connect to the database
+    conn = sqlite3.connect('User.db')
+    cursor = conn.cursor()
+
+    # cursor.execute('SELECT * FROM ')
+
+    user_id = get_person_index_by_username(name)
+
+    cursor.execute('SELECT name, email, phoneNumber FROM Contacts WHERE user_id = ?', (user_id,))
+
+    # Retrieve the data from the database
+    rows = cursor.fetchall()
+
+    # Close the connection
+    conn.close()
+
+
+
+
+    return render_template('viewContacts.html', data=rows)
 
 @app.route('/logout')
 def logout():
