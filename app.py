@@ -234,11 +234,15 @@ def deleteContact(name):
 
     return render_template('deleteContact.html', user=name)
 
+@app.route('/viewContacts')
+def viewContacts():
+    return render_template('viewContacts.html')
 
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
     return redirect(url_for('login'))
+
 
 
 
